@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import AgreementForm from '../components/AgreementForm';
 import { getTemplateByType, TemplateType } from '../templates/templateManager';
@@ -9,7 +9,7 @@ interface FormData {
   [key: string]: string;
 }
 
-export default function CreateAgreement() {
+function CreateAgreementForm() {
   const searchParams = useSearchParams();
   const [agreement, setAgreement] = useState<string | null>(null);
   const [isDeploying, setIsDeploying] = useState(false);
@@ -101,5 +101,35 @@ export default function CreateAgreement() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Loading component for Suspense fallback
+function LoadingState() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-white shadow-lg rounded-xl overflow-hidden">
+          <div className="px-6 py-8">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-200 rounded w-3/4 mb-8"></div>
+              <div className="space-y-4">
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function CreateAgreementPage() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <CreateAgreementForm />
+    </Suspense>
   );
 } 
