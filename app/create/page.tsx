@@ -5,6 +5,10 @@ import { useSearchParams } from 'next/navigation';
 import AgreementForm from '../components/AgreementForm';
 import { getTemplateByType, TemplateType } from '../templates/templateManager';
 
+interface FormData {
+  [key: string]: string;
+}
+
 export default function CreateAgreement() {
   const searchParams = useSearchParams();
   const [agreement, setAgreement] = useState<string | null>(null);
@@ -19,7 +23,7 @@ export default function CreateAgreement() {
     }
   }, [searchParams]);
 
-  const handleSubmit = (data: any) => {
+  const handleSubmit = (data: FormData) => {
     let filledTemplate = getTemplateByType(templateType);
     Object.entries(data).forEach(([key, value]) => {
       filledTemplate = filledTemplate.replace(new RegExp(`\\[\\[.*?: ${key}\\]\\]`, 'g'), value);
